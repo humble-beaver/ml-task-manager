@@ -12,6 +12,6 @@ This is the stack of technologies used in this application:
 
 ## Task Request Model
 
-The JSON file sent with the request must contain the following fields: 
+The JSON file sent with the request must contain the following fields:
 
 1. TODO...

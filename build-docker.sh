@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker build -t ml-task-handler .
+docker build -t ml-task-manager .

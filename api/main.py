@@ -11,12 +11,11 @@ async def root():
 
 
 @app.post("/task/create")
-async def create_task(task: Task, file: UploadFile):
-    task_dict = task.model_dump()
+async def create_task(task: Task):
+    task_dict = task.dict()
     task_id = len(fake_db) + 1
     fake_db[task_id] = {
         "id": task_id,
-        "script_name": file.filename,
         **task_dict}
     return task_dict
 

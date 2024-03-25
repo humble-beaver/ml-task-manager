@@ -12,3 +12,4 @@ class Task(BaseModel):
     backend: str
     data_path: str
     domain_group: str
+    script_path: str
