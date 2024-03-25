@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile
 from .model.task import Task
 
 app = FastAPI()
@@ -11,10 +11,13 @@ async def root():
 
 
 @app.post("/task/create")
-async def create_task(task: Task):
+async def create_task(task: Task, file: UploadFile):
     task_dict = task.model_dump()
     task_id = len(fake_db) + 1
-    fake_db[task_id] = {"id": task_id, **task_dict}
+    fake_db[task_id] = {
+        "id": task_id,
+        "script_name": file.filename,
+        **task_dict}
     return task_dict
 
 
