@@ -1,3 +1,3 @@
 #!/bin/sh
 
-uvicorn api.main:app --reload
+uvicorn app.main:app
