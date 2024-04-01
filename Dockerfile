@@ -1,11 +1,13 @@
-FROM python:3.9
+FROM python:3.11.1-slim
 
-WORKDIR /code
+WORKDIR /app
 
-COPY ./requirements.txt /code/requirements.txt
 
-RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-COPY ./api /code/api
+COPY requirements.txt .
 
-CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "80"]
+RUN pip install -r requirements.txt
+
+COPY . .
