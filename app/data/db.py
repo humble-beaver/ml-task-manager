@@ -1,11 +1,8 @@
 """Database utilities module"""
 from sqlmodel import create_engine, SQLModel
+from ..config import settings
 
-# DATABASE_URL = os.environ.get("")
-DATABASE_URL = "./app/data/mtm.db"
-SQLITE_URL = f"sqlite:///{DATABASE_URL}"
-connect_args = {"check_same_thread": False}
-engine = create_engine(SQLITE_URL, echo=True, connect_args=connect_args)
+engine = create_engine(settings.db_url, echo=True)
 
 
 def init_db():

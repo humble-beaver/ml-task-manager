@@ -33,7 +33,6 @@ class TaskCreate(TaskBase):
     :param TaskBase: The base model class
     :type TaskBase: SQLModel
     """
-    pass
 
 
 class TaskRead(TaskBase):
