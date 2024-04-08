@@ -19,13 +19,19 @@ The JSON file sent with the request must contain the following fields:
 
 ## Installing and Running
 
-We can build and run the system by calling the following single command:
+We can build and run the developing system by calling the following single command:
 
 ```bash
 docker-compose up -d --build
 ```
 
-By doing so, docker will build the image and spin up the two containers in dettached mode, i.e. silently in the background.
+For the production environment, we can run
+
+```bash
+docker-compose -f docker-compose.prod.yml up -d --build
+```
+
+By doing so, docker will build the image and spin up the two containers in dettached mode, i.e. silently in the background. We can then go to localhost:8009/docs for the builtin API documentaion.
 
 ### Sanity checks
 
