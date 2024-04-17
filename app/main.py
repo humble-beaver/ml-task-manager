@@ -1,7 +1,7 @@
 """Entrypoint for the Task Manager API Server"""
 from fastapi import FastAPI, HTTPException
 from sqlmodel import Session, select
-from .model.task import Task, TaskRead, TaskCreate
+from .models.task import Task, TaskRead, TaskCreate
 from .data import db
 
 

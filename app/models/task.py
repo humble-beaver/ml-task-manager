@@ -3,21 +3,24 @@ from sqlmodel import SQLModel, Field
 
 
 class TaskBase(SQLModel):
-    """Base model class
+    """Task base model class
 
     :param SQLModel: Default SQLModel class
     :type SQLModel: obj
     """
     dominion: str
     backend: str
+    account: str
+    num_instances: int
     dataset: str
     container_name: str
     train_script: str
+    in_path: str
     out_path: str
 
 
 class Task(TaskBase, table=True):
-    """Task class that will generate the database
+    """Task class that will generate the table in database
 
     :param TaskBase: The base model class
     :type TaskBase: SQLModel

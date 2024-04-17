@@ -15,7 +15,7 @@ This is the stack of technologies used in this application:
 
 The JSON file sent with the request must contain the following fields:
 
-1. TODO...
+1. TBD
 
 ## Installing and Running
 
