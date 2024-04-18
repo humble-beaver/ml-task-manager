@@ -31,7 +31,7 @@ For the production environment, we can run
 docker-compose -f docker-compose.prod.yml up -d --build
 ```
 
-By doing so, docker will build the image and spin up the two containers in dettached mode, i.e. silently in the background. We can then go to localhost:8009/docs for the builtin API documentaion.
+By doing so, docker will build the image and spin up the two containers in dettached mode, i.e. silently in the background. We can then go to localhost:8008/docs (for the dev container) and localhost:8009/docs for the prod container, in order to access the builtin API documentaion.
 
 ### Sanity checks
 

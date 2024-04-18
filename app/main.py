@@ -23,6 +23,7 @@ async def create_task(task: TaskCreate):
     :return: Same data but with assigned id
     :rtype: TaskRead
     """
+    print(task.dict())
     with Session(db.engine) as session:
         db_task = Task.model_validate(task)
         session.add(db_task)

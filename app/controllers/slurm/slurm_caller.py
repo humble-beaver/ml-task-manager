@@ -10,7 +10,7 @@ class SlurmJobCaller:
 
     def __init__(self, code_path, num_instances, sif_path, share_dir,
                  input_folder, output_folder,
-                 slurm_queue, slurm_account, template_path):
+                 slurm_queue, slurm_account):
         self.code_path = code_path
         self.num_instances = num_instances
         self.sif_path = sif_path
@@ -21,7 +21,6 @@ class SlurmJobCaller:
         self.slurm_account = slurm_account
         self.job_id = None
         self.gres = '--gres=gpu:1' if 'gpu' in slurm_queue else ''
-        self.template_path = template_path
 
     def __read_template(self, template_path):
         with open(template_path, "r", encoding='utf-8') as f:
@@ -75,7 +74,7 @@ class SlurmJobCaller:
             print(f"Job is already running. Job id is {self.job_id}")
             return -1
 
-        slurm_template = self.__read_template(self.template_path)
+        slurm_template = self.__read_template("./slurm_template.srm")
 
         slurm_script = slurm_template.format(
             slurm_queue=self.slurm_queue,
@@ -109,8 +108,8 @@ class SlurmJobCaller:
     def get_job_status(self):
         """Get Job status via squeue command
 
-        :return: nothing
-        :rtype: None
+        :return: output of squeue command with job_id specified TODO: specify
+        :rtype: str
         """
         if self.job_id is None:
             print("Warning: No job submitted yet.")
