@@ -1,27 +1,12 @@
-version: '3.8'
-
 services:
-  web:
-    build: .
-    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; uvicorn app.main:app --host 0.0.0.0'
-    volumes:
-      - .:/app
-    ports:
-      - 8008:8000
-    environment:
-      - DATABASE_URL=postgresql://ml-task-manager:ml-task-manager@db:5432/ml-task-manager
-    depends_on:
-      - db
-  db:
-    image: postgres:15-alpine
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
-    expose:
-      - 5432
-    environment:
-      - POSTGRES_USER=ml-task-manager
-      - POSTGRES_PASSWORD=ml-task-manager
-      - POSTGRES_DB=ml-task-manager
+  slurmjupyter:
+        image: jupyter
+        hostname: slurmjupyter
+        user: admin
+        volumes:
+                - shared-vol:/home/admin
+        ports:
+                - 8888:8888
   slurmmaster:
         image: masterslurm
         hostname: slurmmaster
@@ -56,7 +41,6 @@ services:
                 - shared-vol:/home/admin
         links:
                 - slurmmaster
-
 volumes:
-  postgres_data:
-  shared-vol:
+        shared-vol:
+
