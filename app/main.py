@@ -2,6 +2,7 @@
 from fastapi import FastAPI, HTTPException
 from sqlmodel import Session, select
 from .models.task import Task, TaskRead, TaskCreate
+from .controllers.ssh_client.client import sshClient
 from .data import db
 
 
@@ -23,7 +24,6 @@ async def create_task(task: TaskCreate):
     :return: Same data but with assigned id
     :rtype: TaskRead
     """
-    print(task.dict())
     with Session(db.engine) as session:
         db_task = Task.model_validate(task)
         session.add(db_task)
@@ -59,3 +59,9 @@ async def get_task_by_id(task_id: int):
         if not task:
             raise HTTPException(status_code=404, detail="Task not found")
         return task
+
+
+@app.get("/test_ssh")
+async def test_ssh():
+    """Test SSH connection to cluster host"""
+    pass

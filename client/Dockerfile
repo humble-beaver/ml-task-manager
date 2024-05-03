@@ -1,0 +1,35 @@
+FROM ubuntu:20.04
+RUN apt-get update && \
+    apt-get install -y \
+    openssh-server \
+    munge \
+    vim \
+    build-essential \
+    git \
+    mariadb-server \
+    wget
+
+RUN apt install slurm-client -y
+RUN apt install curl dirmngr apt-transport-https lsb-release ca-certificates -y
+RUN curl -sL https://deb/nodesource.com/setup_12.x | bash -
+RUN apt install -y sudo python3.9 python3-pip
+RUN useradd -m admin -s /usr/bin/bash -d /home/admin && echo "admin:admin" | chpasswd && \
+    adduser admin sudo && \
+    echo "admin     ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+RUN apt update -y && apt install nodejs -y && npm install -g configurable-http-proxy
+
+COPY slurm.conf /etc/slurm-llnl/
+COPY cgroup.conf /etc/slurm-llnl/
+COPY docker-entrypoint.sh /etc/slurm-llnl/
+
+WORKDIR /home/admin
+
+RUN mkdir /var/run/sshd
+# Set root password for SSH access
+RUN echo 'root:root123' | chpasswd
+RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+EXPOSE 22
+
+ENTRYPOINT [ "/etc/slurm-llnl/docker-entrypoint.sh" ]
