@@ -2,7 +2,7 @@
 from fastapi import FastAPI, HTTPException
 from sqlmodel import Session, select
 from .models.task import Task, TaskRead, TaskCreate
-from .controllers.ssh_client.client import sshClient
+from .controllers.ssh_client.client import RemoteClient
 from .data import db
 
 

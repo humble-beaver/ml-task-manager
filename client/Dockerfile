@@ -1,4 +1,7 @@
 FROM ubuntu:20.04
+
+RUN rm -f /etc/apt/sources.list.d/*.list
+
 RUN apt-get update && \
     apt-get install -y \
     openssh-server \
@@ -7,17 +10,25 @@ RUN apt-get update && \
     build-essential \
     git \
     mariadb-server \
-    wget
+    wget \
+    slurm-client \
+    curl \
+    dirmngr \
+    apt-transport-https \
+    lsb-release \
+    ca-certificates \
+    sudo \
+    python3.9 \
+    python3-pip \
+    nodejs \
+    && rm -rf /var/lib/apt/lists/* 
 
-RUN apt install slurm-client -y
-RUN apt install curl dirmngr apt-transport-https lsb-release ca-certificates -y
 RUN curl -sL https://deb/nodesource.com/setup_12.x | bash -
-RUN apt install -y sudo python3.9 python3-pip
 RUN useradd -m admin -s /usr/bin/bash -d /home/admin && echo "admin:admin" | chpasswd && \
     adduser admin sudo && \
     echo "admin     ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-RUN apt update -y && apt install nodejs -y && npm install -g configurable-http-proxy
+RUN npm install -g configurable-http-proxy
 
 COPY slurm.conf /etc/slurm-llnl/
 COPY cgroup.conf /etc/slurm-llnl/
