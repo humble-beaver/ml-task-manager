@@ -1,5 +1,7 @@
 FROM ubuntu:20.04
 
+ARG DEBIAN_FRONTEND=noninteractive
+
 RUN rm -f /etc/apt/sources.list.d/*.list
 
 RUN apt-get update && \
@@ -21,6 +23,7 @@ RUN apt-get update && \
     python3.9 \
     python3-pip \
     nodejs \
+    npm \
     && rm -rf /var/lib/apt/lists/* 
 
 RUN curl -sL https://deb/nodesource.com/setup_12.x | bash -
