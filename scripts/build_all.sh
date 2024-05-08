@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cd ../app
+cd app
 docker build -t ml-task-manager .
 
 cd ../manager

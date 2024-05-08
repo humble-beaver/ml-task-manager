@@ -1,0 +1,32 @@
+notas-atenas.txt
+
+# Notas Athenas
+atn1mg4 nó master, sem GPU, pedimos nó pra ele
+
+1. ssh no atn1mg4
+	ssh fg1n@atn1mg4
+2. solicita nó
+	salloc -p gpu -A twinscie
+	-p --partition
+	-A --account
+3. ssh no nó disponibilizado
+	ssh {NODE_LIST}
+4. comandos singularity
+
+
+
+
+* singularity = docker
+* checar meus recursos -> squeue --me
+* desalocar meus nodes scancel {job_id}
+
+!(dar uma olhada no singularity)!
+
+* As vezes --exclusive nao funciona
+Nesses casos: 	--gres=gpu:8
+
+pra rodar scripts slurm (.srm) usa o comando `sbatch <script.srm>`
+
+
+repositorio petrobras
+https://codigo-externo.petrobras.com.br/
