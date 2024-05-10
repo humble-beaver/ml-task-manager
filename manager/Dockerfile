@@ -33,17 +33,22 @@ RUN useradd -m admin -s /usr/bin/bash -d /home/admin && echo "admin:admin" | chp
 
 RUN npm install -g configurable-http-proxy
 
+RUN mkdir /var/run/sshd
+# Set root password for SSH access
+RUN echo 'root:root123' | chpasswd
+RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+
 COPY slurm.conf /etc/slurm-llnl/
 COPY cgroup.conf /etc/slurm-llnl/
 COPY docker-entrypoint.sh /etc/slurm-llnl/
 
 WORKDIR /home/admin
 
-RUN mkdir /var/run/sshd
-# Set root password for SSH access
-RUN echo 'root:root123' | chpasswd
-RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
-RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 EXPOSE 22
 
-ENTRYPOINT [ "/etc/slurm-llnl/docker-entrypoint.sh" ]
+ENV USER admin
+ENV SHELL bash
+
+RUN sudo service munge start
+CMD [ "/usr/bin/sshd" "-D"]
