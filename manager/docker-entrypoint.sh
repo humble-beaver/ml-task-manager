@@ -1,5 +1,7 @@
 #!/bin/bash
 
 sudo service munge start
+sudo service ssh start
+sudo /etc/init.d/ssh start
 
-/usr/bin/sshd -D
+tail -f /dev/null

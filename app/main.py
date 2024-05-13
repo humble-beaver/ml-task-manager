@@ -7,6 +7,7 @@ from .data import db
 
 
 app = FastAPI()
+remote = RemoteClient()
 
 
 @app.on_event("startup")
@@ -63,5 +64,7 @@ async def get_task_by_id(task_id: int):
 
 @app.get("/test_ssh")
 async def test_ssh():
-    """Test SSH connection to cluster host"""
-    pass
+    """Test SSH connection to cluster manager"""
+    remote.connect()
+    remote.exec("sinfo")
+    return remote.get_output()

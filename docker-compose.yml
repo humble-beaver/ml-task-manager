@@ -1,13 +1,14 @@
 services:
   web:
     image: ml-task-manager
-    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; uvicorn app.main:app --host 0.0.0.0'
+    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; uvicorn app.main:app --host 0.0.0.0 --reload'
     volumes:
       - .:/app
     ports:
       - 8008:8000
     environment:
       - DATABASE_URL=postgresql://ml-task-manager:ml-task-manager@db:5432/ml-task-manager
+      - DEBUG=1
     depends_on:
       - db
   db:
@@ -26,8 +27,6 @@ services:
     user: admin
     volumes:
       - shared-vol:/home/admin
-    ports:
-      - 8888:8888
   slurmmaster:
     image: masterslurm
     hostname: slurmmaster
