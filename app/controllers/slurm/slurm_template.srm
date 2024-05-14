@@ -14,5 +14,5 @@
 #SBATCH --exclude atn1b01n16,atn1b01n08,atn1b03n25,atn1b01n19
 #SBATCH --output={output_folder}/slurm-%j.out
 
-
+# TODO: validate if container exists
 singularity run -B {share_dir}:{share_dir}  {sif_path} python {code_path} {input_folder} {output_folder}

@@ -14,8 +14,6 @@ atn1mg4 nó master, sem GPU, pedimos nó pra ele
 4. comandos singularity
 
 
-
-
 * singularity = docker
 * checar meus recursos -> squeue --me
 * desalocar meus nodes scancel {job_id}
