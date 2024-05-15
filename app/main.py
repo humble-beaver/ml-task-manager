@@ -1,11 +1,13 @@
 """Entrypoint for the Task Manager API Server"""
 from fastapi import FastAPI, HTTPException
 from sqlmodel import Session, select
-from .model.task import Task, TaskRead, TaskCreate
+from .models.task import Task, TaskRead, TaskCreate
+from .controllers.ssh_client.client import RemoteClient
 from .data import db
 
 
 app = FastAPI()
+remote = RemoteClient()
 
 
 @app.on_event("startup")
@@ -58,3 +60,11 @@ async def get_task_by_id(task_id: int):
         if not task:
             raise HTTPException(status_code=404, detail="Task not found")
         return task
+
+
+@app.get("/test_ssh")
+async def test_ssh():
+    """Test SSH connection to cluster manager"""
+    remote.connect()
+    remote.exec("sinfo")
+    return remote.get_output()

@@ -15,7 +15,7 @@ This is the stack of technologies used in this application:
 
 The JSON file sent with the request must contain the following fields:
 
-1. TODO...
+1. TBD
 
 ## Installing and Running
 
@@ -31,7 +31,16 @@ For the production environment, we can run
 docker-compose -f docker-compose.prod.yml up -d --build
 ```
 
-By doing so, docker will build the image and spin up the two containers in dettached mode, i.e. silently in the background. We can then go to localhost:8009/docs for the builtin API documentaion.
+By doing so, docker will build the image and spin up the two containers in dettached mode, i.e. silently in the background. We can then go to localhost:8008/docs (for the dev container) and localhost:8009/docs for the prod container, in order to access the builtin API documentaion.
+
+For monitoring and checking for errors, you can acompany the logs by issuing `docker-compose logs -f`.
+
+If you must rebuild or restart the hole process, you can bring down the containers and the associated volumes with:
+
+```bash
+docker-compose down -v  # dev
+docker-compose -f docker-compose.prod.yml down -v  # prod
+```
 
 ### Sanity checks
 

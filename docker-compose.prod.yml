@@ -4,7 +4,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile.prod
+      dockerfile: ./app/Dockerfile.prod
     ports:
       - 8009:80
     environment:
