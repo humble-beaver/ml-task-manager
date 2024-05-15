@@ -15,6 +15,8 @@ atn1mg4 nó master, sem GPU, pedimos nó pra ele
 
 
 * singularity = docker
+    singularity pull tensorflow.sif docker://tensorflow/tensorflow:latest
+
 * checar meus recursos -> squeue --me
 * desalocar meus nodes scancel {job_id}
 
@@ -28,3 +30,5 @@ pra rodar scripts slurm (.srm) usa o comando `sbatch <script.srm>`
 
 repositorio petrobras
 https://codigo-externo.petrobras.com.br/
+
+lucas.ceschini.prestserv@petrobras.com.br

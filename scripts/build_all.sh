@@ -1,7 +1,7 @@
 #!/bin/sh
 
 cd app
-docker build -t ml-task-manager .
+docker build -t humblebeaver/ml-task-manager .
 
 cd ../manager
 docker build -t managerslurm .
