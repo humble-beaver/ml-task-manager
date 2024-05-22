@@ -1,6 +1,7 @@
 """Database configuration file
 """
-from pydantic import BaseSettings, Field
+from pydantic_settings import BaseSettings
+from pydantic import Field
 
 
 class Settings(BaseSettings):
@@ -9,7 +10,7 @@ class Settings(BaseSettings):
     :param BaseSettings: pydantic base settings class
     :type BaseSettings: class
     """
-    db_url: str = Field(..., env='DATABASE_URL')
+    db_url: str = Field(validation_alias='DATABASE_URL')
 
 
 settings = Settings()

@@ -1,12 +1,11 @@
 #!/bin/bash
-#SBATCH --nodes=1           #Numero de Nós
-#SBATCH --ntasks-per-node=1 #Numero de tarefas por Nó
-#SBATCH --ntasks=1          #Numero de tarefas
-#SBATCH -p cpu          #Fila (partition) a ser utilizada
-#SBATCH -J twinscie_teste_api            #Nome job
+#SBATCH --nodes=1               #Numero de Nós
+#SBATCH --ntasks-per-node=1     #Numero de tarefas por Nó
+#SBATCH --ntasks=1              #Numero de tarefas
+#SBATCH -p cpu                  #Fila (partition) a ser utilizada
+#SBATCH -J twinscie_teste_api   #Nome job
 #SBATCH --account=twinscie
 #SBATCH --exclusive
-
 
 echo "CUDA_VISIBLE_DEVICES: " $CUDA_VISIBLE_DEVICES
 echo $SLURM_JOB_NODELIST
@@ -14,8 +13,7 @@ echo "SLURM_JOBID: " $SLURM_JOBID
 JOBNAME=$SLURM_JOB_NAME
 echo "JOBNAME: " $JOBNAME
 
+# TODO: check if container.sif exists
 
-singularity run -b .... arquivo_sing.sif python main_api.py
-
-
+singularity run -B .... container.sif python main_api.py
 echo "fim"

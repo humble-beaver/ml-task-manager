@@ -1,0 +1,39 @@
+{
+    "dataset_name": "wine_classification",
+
+    "model_params": {
+      "n_estimators": 2,
+      "random_state": 42
+    },
+
+    "runner_location": "local",
+    "model_tracking": true,
+    "tracking_uri": "experiments",
+    "experiment_name": "Usando Localhost uri",
+    "train_script_path": "learner_source/main_v2.py",
+    "configuration": {
+
+      "local": {
+        "infra_config": {
+          "instance_type": "cpu"
+        }
+      },
+      "atena02": {
+        "infra_config": {
+          "instance_type": "gpu",
+          "image_name":"teste_image"
+        }
+      },
+      
+      "aws": {
+        "infra_config": {
+          "role": "arn:aws:iam::example",
+          "instance_type": "ml.m5.large",
+          "image_name":"teste_image",
+          "bucket_name": "bucketcriadopelopyparavercustos123",
+          "prefix_name":"SklearnWineV2"
+        }
+      }
+    }
+  }
+  

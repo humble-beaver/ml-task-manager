@@ -32,3 +32,5 @@ repositorio petrobras
 https://codigo-externo.petrobras.com.br/
 
 lucas.ceschini.prestserv@petrobras.com.br
+
+config vai ter params pro arquivo .py, vou ler ele e concatenar

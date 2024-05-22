@@ -1,15 +1,12 @@
-"""SSH client for connecting to host clusters"""
-import socket
+"""Remote Operations Handler class for ssh connection and scp file transfer"""
 from paramiko import SSHClient, AutoAddPolicy
+from scp import SCPClient
 
 
-class RemoteClient:
-    """Paramiko based remote ssh client to connect to cluster host"""
+class RemoteHandler:
+    """Paramiko and scp based remote handler class"""
 
     def __init__(self):
-        self.host = "slurmmanager"
-        self.user = "admin"
-        self.passwd = "admin"
         self.stdin = ""
         self.stdout = ""
         self.stderr = ""
@@ -18,11 +15,11 @@ class RemoteClient:
         self.client.load_system_host_keys()
         self.client.set_missing_host_key_policy(AutoAddPolicy())
 
-    def connect(self):
+    def connect(self,  host, user, passwd):
         """Connect to SSH host
         """
         self.client.connect(
-            hostname=self.host, username=self.user, password=self.passwd)
+            hostname=host, username=user, password=passwd)
 
     def close(self):
         """SSH close connection call
@@ -47,3 +44,13 @@ class RemoteClient:
         :rtype: str
         """
         return self.stdout.read().decode('utf8')
+
+    def send_file(self, filename):
+        """Send file via scp
+
+        :param filename: name of the file to be sent
+        :type filename: str
+        """
+        scp = SCPClient(self.client.get_transport())
+        scp.put(filename, f"/tmp/{filename}")
+        scp.close()

@@ -1,19 +1,34 @@
 """Entrypoint for the Task Manager API Server"""
-from fastapi import FastAPI, HTTPException
+import hashlib
+from fastapi import FastAPI, HTTPException, UploadFile
 from sqlmodel import Session, select
 from .models.task import Task, TaskRead, TaskCreate
-from .controllers.ssh_client.client import RemoteClient
+
 from .data import db
 
 
 app = FastAPI()
-remote = RemoteClient()
 
 
 @app.on_event("startup")
 def on_startup():
     """Function to run before accepting requests"""
     db.init_db()
+
+
+@app.post("/atena_submit")
+async def atena_submit(files: list[UploadFile]):
+    """Submit job to atena cluster"""
+    contents = {}
+    for file in files:
+        contents[file.filename] = await file.read()
+        for fname, fcont in contents.items():
+            print(fcont)
+            with open(f"app/tmp/{fname}", 'wb') as f:
+                f.write(fcont)
+            with open(f"app/tmp/{fname}.md5", "wb") as f:
+                hashmd5 = hashlib.md5(fcont).hexdigest()
+                f.write(hashmd5.encode())
 
 
 @app.post("/task/", response_model=TaskRead)
