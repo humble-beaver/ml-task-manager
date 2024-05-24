@@ -21,6 +21,6 @@ export POSTGRES_PASSWORD=ml-task-manager
 export POSTGRES_DB=ml-task-manager
 
 singularity run db.sif --port 5432 --host 0.0.0.0 &
-singularity run -B ml-task-manager/app:app api.sif ./app/run_api.sh --port 8008 --host 0.0.0.0
+singularity run -B ml-task-manager:/tmp/app api.sif /tmp/app/run_api.sh --port 8008 --host 0.0.0.0
 
 echo "fim"
