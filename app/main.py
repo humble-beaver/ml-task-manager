@@ -53,7 +53,7 @@ async def create_task(files: list[UploadFile]):
             task = process_config(fpath)
         if ".py" in fname:
             atena_upload(fname)
-    with Session(db.engine) as session:
+    with Session(engine) as session:
         db_task = Task.model_validate(task)
         session.add(db_task)
         session.commit()
@@ -64,7 +64,7 @@ async def create_task(files: list[UploadFile]):
 @app.get("/task/", response_model=list[Task])
 async def get_tasks():
     """Retrieve all saved tasks"""
-    with Session(db.engine) as session:
+    with Session(engine) as session:
         tasks = session.exec(select(Task)).all()
         return tasks
 
@@ -72,7 +72,7 @@ async def get_tasks():
 @app.get("/task/{task_id}", response_model=TaskRead)
 async def get_task_by_id(task_id: int):
     """Retrieve single record of Task that corresponds to given id"""
-    with Session(db.engine) as session:
+    with Session(engine) as session:
         task = session.get(Task, task_id)
         if not task:
             raise HTTPException(status_code=404, detail="Task not found")
