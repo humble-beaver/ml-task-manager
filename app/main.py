@@ -3,11 +3,20 @@ import os
 import shutil
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, UploadFile, status
-from sqlmodel import Session, select
+from sqlmodel import Session, SQLModel, create_engine, select
 from .models.task import Task, TaskRead
 from .utils import save_file, process_config
 from .data import db
 from .controllers.ssh.handler import RemoteHandler
+
+
+sqlite_file_name = "database.db"
+sqlite_url = f"sqlite:///{sqlite_file_name}"
+engine = create_engine(sqlite_url, echo=True)
+
+
+def create_db_and_tables():
+    SQLModel.metadata.create_all(engine)
 
 
 @asynccontextmanager
@@ -69,3 +78,7 @@ async def get_task_by_id(task_id: int):
         if not task:
             raise HTTPException(status_code=404, detail="Task not found")
         return task
+
+
+if __name__ == "__main__":
+    create_db_and_tables()
