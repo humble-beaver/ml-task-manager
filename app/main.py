@@ -22,6 +22,7 @@ def create_db_and_tables():
 async def lifespan(app: FastAPI):
     """Lifespan function for initialization and shutting down functions"""
     # db.init_db()
+    create_db_and_tables()
     os.makedirs('app/tmp', exist_ok=True)
     yield
     shutil.rmtree('app/tmp')
