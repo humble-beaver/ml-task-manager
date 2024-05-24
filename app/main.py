@@ -6,7 +6,6 @@ from fastapi import FastAPI, HTTPException, UploadFile, status
 from sqlmodel import Session, SQLModel, create_engine, select
 from .models.task import Task, TaskRead
 from .utils import save_file, process_config
-from .data import db
 from .controllers.ssh.handler import RemoteHandler
 
 
@@ -22,7 +21,7 @@ def create_db_and_tables():
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Lifespan function for initialization and shutting down functions"""
-    db.init_db()
+    # db.init_db()
     os.makedirs('app/tmp', exist_ok=True)
     yield
     shutil.rmtree('app/tmp')
