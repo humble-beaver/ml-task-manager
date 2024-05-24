@@ -8,14 +8,13 @@ class TaskBase(SQLModel):
     :param SQLModel: Default SQLModel class
     :type SQLModel: obj
     """
-    code_path: str
-    num_instances: int
-    sif_path: str
-    share_dir: str
-    input_folder: str
-    output_folder: str
-    slurm_queue: str
-    slurm_account: str
+    instance_type: str
+    image_name: str
+    account: str
+    runner_location: str
+    train_script_path: str
+    dataset_name: str
+    experiment_name: str
 
 
 class Task(TaskBase, table=True):

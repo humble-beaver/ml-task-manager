@@ -1,0 +1,39 @@
+{
+    "dataset_name": "adult",
+
+    "model_params": {
+      "n_estimators": 2,
+      "random_state": 42
+    },
+
+    "runner_location": "atena02",
+    "model_tracking": true,
+    "tracking_uri": "experiments",
+    "experiment_name": "Usando Localhost uri",
+    "train_script_path": "/tmp/main_v2.py",
+    "clusters": {
+      "local": {
+        "infra_config": {
+          "instance_type": "cpu"
+        }
+      },
+      "atena02": {
+        "infra_config": {
+          "instance_type": "cpu",
+          "image_name":"teste_image",
+          "account": "twinscie"
+        }
+      },
+      
+      "aws": {
+        "infra_config": {
+          "role": "arn:aws:iam::example",
+          "instance_type": "ml.m5.large",
+          "image_name":"teste_image",
+          "bucket_name": "bucketcriadopelopyparavercustos123",
+          "prefix_name":"SklearnWineV2"
+        }
+      }
+    }
+  }
+  

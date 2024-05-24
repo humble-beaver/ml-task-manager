@@ -1,45 +1,50 @@
 """Entrypoint for the Task Manager API Server"""
-import hashlib
-from fastapi import FastAPI, HTTPException, UploadFile
+import os
+import shutil
+from contextlib import asynccontextmanager
+from fastapi import FastAPI, HTTPException, UploadFile, status
 from sqlmodel import Session, select
-from .models.task import Task, TaskRead, TaskCreate
-
+from .models.task import Task, TaskRead
+from .utils import save_file, process_config
 from .data import db
+from .controllers.ssh.handler import RemoteHandler
 
 
-app = FastAPI()
-
-
-@app.on_event("startup")
-def on_startup():
-    """Function to run before accepting requests"""
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lifespan function for initialization and shutting down functions"""
     db.init_db()
+    os.makedirs('app/tmp', exist_ok=True)
+    yield
+    shutil.rmtree('app/tmp')
+
+app = FastAPI(lifespan=lifespan)
 
 
-@app.post("/atena_submit")
-async def atena_submit(files: list[UploadFile]):
+def atena_upload(fname):
     """Submit job to atena cluster"""
-    contents = {}
-    for file in files:
-        contents[file.filename] = await file.read()
-        for fname, fcont in contents.items():
-            print(fcont)
-            with open(f"app/tmp/{fname}", 'wb') as f:
-                f.write(fcont)
-            with open(f"app/tmp/{fname}.md5", "wb") as f:
-                hashmd5 = hashlib.md5(fcont).hexdigest()
-                f.write(hashmd5.encode())
+    host = "slurmmanager"
+    user = "admin"
+    passwd = "admin"
+    remote = RemoteHandler()
+    remote.connect(host, user, passwd)
+    sanity_check = remote.send_file(fname)
+    if not sanity_check:
+        return status.HTTP_500_INTERNAL_SERVER_ERROR
+    return status.HTTP_200_OK
 
 
 @app.post("/task/", response_model=TaskRead)
-async def create_task(task: TaskCreate):
-    """Create new task and save it to DB
-
-    :param task: JSON Request body with all Task model parameters
-    :type task: TaskCreate
-    :return: Same data but with assigned id
-    :rtype: TaskRead
-    """
+async def create_task(files: list[UploadFile]):
+    """Create new task and save it to DB"""
+    for file in files:
+        fname = file.filename
+        fdata = await file.read()
+        fpath = save_file(fname, fdata)
+        if ".json" in fname:
+            task = process_config(fpath)
+        if ".py" in fname:
+            atena_upload(fname)
     with Session(db.engine) as session:
         db_task = Task.model_validate(task)
         session.add(db_task)
@@ -50,11 +55,7 @@ async def create_task(task: TaskCreate):
 
 @app.get("/task/", response_model=list[Task])
 async def get_tasks():
-    """Retrieve all saved tasks
-
-    :return: List of all tasks
-    :rtype: list[Task]
-    """
+    """Retrieve all saved tasks"""
     with Session(db.engine) as session:
         tasks = session.exec(select(Task)).all()
         return tasks
@@ -62,24 +63,9 @@ async def get_tasks():
 
 @app.get("/task/{task_id}", response_model=TaskRead)
 async def get_task_by_id(task_id: int):
-    """Retrieve single record of Task that corresponds to given id
-
-    :param task_id: the id of the requested task
-    :type task_id: int
-    :raises HTTPException: A 404 status exception if task not found
-    :return: task info
-    :rtype: Task
-    """
+    """Retrieve single record of Task that corresponds to given id"""
     with Session(db.engine) as session:
         task = session.get(Task, task_id)
         if not task:
             raise HTTPException(status_code=404, detail="Task not found")
         return task
-
-
-@app.get("/test_ssh")
-async def test_ssh():
-    """Test SSH connection to cluster manager"""
-    remote.connect()
-    remote.exec("sinfo")
-    return remote.get_output()
