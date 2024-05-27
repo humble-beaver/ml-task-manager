@@ -25,7 +25,8 @@ def process_config(fpath: str) -> dict:
     conf = load_json(fpath)
     filtered_confs = {}
     cluster_confs = {
-        'atena02': ['instance_type', 'image_name', 'account']
+        'atena02': ['instance_type', 'image_name', 'account'],
+        'dev': ['instance_type', 'image_name', 'account']
     }
     target_cluster = conf['runner_location']
     general_confs = ['runner_location', 'dataset_name',

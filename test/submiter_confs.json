@@ -12,9 +12,11 @@
     "experiment_name": "Usando Localhost uri",
     "train_script_path": "/tmp/main_v2.py",
     "clusters": {
-      "local": {
+      "dev": {
         "infra_config": {
-          "instance_type": "cpu"
+          "instance_type": "slurmpar",
+          "image_name": "teste_image",
+          "account": "twinscie"
         }
       },
       "atena02": {

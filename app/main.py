@@ -7,14 +7,17 @@ from sqlmodel import Session, SQLModel, create_engine, select
 from .models.task import Task, TaskRead
 from .utils import save_file, process_config
 from .controllers.ssh.handler import RemoteHandler
+from .controllers.slurm.slurm_manager import prep_template
 
 
-sqlite_file_name = "database.db"
-sqlite_url = f"sqlite:///{sqlite_file_name}"
+SQLITE_FILE_NAME = "database.db"
+sqlite_url = f"sqlite:///{SQLITE_FILE_NAME}"
 engine = create_engine(sqlite_url, echo=True)
+remote = RemoteHandler()
 
 
 def create_db_and_tables():
+    """initialize db and tables"""
     SQLModel.metadata.create_all(engine)
 
 
@@ -32,10 +35,21 @@ app = FastAPI(lifespan=lifespan)
 
 def atena_upload(fname):
     """Submit job to atena cluster"""
+    host = "atn1mg4"
+    user = "fg1n"
+    passwd = "my_password"
+    remote.connect(host, user, passwd)
+    sanity_check = remote.send_file(fname)
+    if not sanity_check:
+        return status.HTTP_500_INTERNAL_SERVER_ERROR
+    return status.HTTP_200_OK
+
+
+def dev_upload(fname):
+    """Submit job to local dev cluster"""
     host = "slurmmanager"
     user = "admin"
     passwd = "admin"
-    remote = RemoteHandler()
     remote.connect(host, user, passwd)
     sanity_check = remote.send_file(fname)
     if not sanity_check:
@@ -54,6 +68,9 @@ async def create_task(files: list[UploadFile]):
             task = process_config(fpath)
         if ".py" in fname:
             atena_upload(fname)
+    srm_path = prep_template(task)
+    atena_upload(srm_path)
+    remote.exec(f"sbatch /tmp/{srm_path}")
     with Session(engine) as session:
         db_task = Task.model_validate(task)
         session.add(db_task)

@@ -14,5 +14,4 @@ JOBNAME=$SLURM_JOB_NAME
 echo "JOBNAME: " $JOBNAME
 
 # TODO: check if container.sif exists
-# singularity run {image_name}.sif python {train_script_path} /tmp/{dataset_name}
-python {train_script_path} /tmp/{dataset_name}
+singularity run {image_name}.sif python {train_script_path} /tmp/{dataset_name} -o /tmp/output.txt
