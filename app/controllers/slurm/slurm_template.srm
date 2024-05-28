@@ -6,7 +6,7 @@
 #SBATCH --ntasks-per-node=1     #Numero de tarefas por Nó
 #SBATCH --ntasks=1              #Numero de tarefas
 #SBATCH --exclusive
-#SBATCH -o ./job_output.txt
+#SBATCH -o /tmp/app/job_output.txt
 
 echo "CUDA_VISIBLE_DEVICES: " $CUDA_VISIBLE_DEVICES
 echo $SLURM_JOB_NODELIST
@@ -15,4 +15,4 @@ JOBNAME=$SLURM_JOB_NAME
 echo "JOBNAME: " $JOBNAME
 
 # TODO: check if container.sif exists
-singularity run -B ml-task-manager:/tmp/app -H /tmp/app /tmp/app{image_name}.sif python /tmp/app{train_script_path} /tmp/app{dataset_name}
+singularity run -B ml-task-manager:/tmp/app -H /tmp/app /tmp/app/{image_name}.sif python /tmp/app/{train_script_path} /tmp/app/{dataset_name}
