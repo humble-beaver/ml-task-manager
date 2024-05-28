@@ -22,7 +22,7 @@ class RemoteHandler:
         with open(filepath, 'r', encoding='utf-8') as f:
             local_hash = hashlib.md5(str(f.read()).encode('utf-8')).hexdigest()
         self.exec(f"md5sum /tmp/{filename}")
-        remote_hash = self.get_output()
+        remote_hash = self.get_output()[0]
         remote_hash = remote_hash.split(" ")[0]
         if local_hash == remote_hash:
             return True
