@@ -15,4 +15,4 @@ JOBNAME=$SLURM_JOB_NAME
 echo "JOBNAME: " $JOBNAME
 
 # TODO: check if container.sif exists
-singularity run -B ml-task-manager:/tmp/app -H /tmp/app {image_name}.sif python {train_script_path} {dataset_name}
+singularity run -B ml-task-manager:/tmp/app -H /tmp/app /tmp/app{image_name}.sif python /tmp/app{train_script_path} /tmp/app{dataset_name}
