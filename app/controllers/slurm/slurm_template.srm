@@ -6,7 +6,7 @@
 #SBATCH --ntasks-per-node=1     #Numero de tarefas por Nó
 #SBATCH --ntasks=1              #Numero de tarefas
 #SBATCH --exclusive
-#SBATCH -o job_output.txt
+#SBATCH -o /tmp/app/job_output.txt
 
 echo "CUDA_VISIBLE_DEVICES: " $CUDA_VISIBLE_DEVICES
 echo $SLURM_JOB_NODELIST
