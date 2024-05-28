@@ -22,7 +22,7 @@
       "atena02": {
         "infra_config": {
           "instance_type": "cpu",
-          "image_name":"teste_image",
+          "image_name":"sklearn_sample_latest",
           "account": "twinscie"
         }
       },
