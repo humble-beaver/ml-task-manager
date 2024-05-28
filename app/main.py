@@ -71,7 +71,9 @@ async def create_task(files: list[UploadFile]):
     srm_path = prep_template(task)
     atena_upload(srm_path)
     remote.exec(f"sbatch /tmp/{srm_path}")
+    print("inicio")
     print(remote.get_output())
+    print("fim")
     with Session(engine) as session:
         db_task = Task.model_validate(task)
         session.add(db_task)

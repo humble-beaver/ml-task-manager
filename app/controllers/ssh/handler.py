@@ -46,7 +46,9 @@ class RemoteHandler:
 
     def get_output(self):
         """Get standard output of latest command executed"""
-        return self.stdout.read().decode('utf8')
+        stdout = self.stdout.read().decode('utf8')
+        stderr = self.stderr.read().decode('utf8')
+        return stdout, stderr
 
     def send_file(self, filename):
         """Send file via scp"""
