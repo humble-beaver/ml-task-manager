@@ -1,5 +1,5 @@
 {
-    "dataset_name": "adult",
+    "dataset_name": "wine_classification",
 
     "model_params": {
       "n_estimators": 2,
@@ -10,7 +10,7 @@
     "model_tracking": true,
     "tracking_uri": "experiments",
     "experiment_name": "Usando Localhost uri",
-    "train_script_path": "/tmp/main_v2.py",
+    "train_script_path": "/tmp/test.py",
     "clusters": {
       "dev": {
         "infra_config": {

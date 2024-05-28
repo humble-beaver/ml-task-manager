@@ -6,7 +6,7 @@
 #SBATCH -J twinscie_teste_api   #Nome job
 #SBATCH --account=twinscie
 #SBATCH --exclusive
-#SBATCH -o api_log.txt
+#SBATCH -o log_api.txt
 
 echo "CUDA_VISIBLE_DEVICES: " $CUDA_VISIBLE_DEVICES
 echo $SLURM_JOB_NODELIST
