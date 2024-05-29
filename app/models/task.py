@@ -12,7 +12,7 @@ class TaskBase(SQLModel):
     image_name: str
     account: str
     runner_location: str
-    train_script_path: str
+    train_script_name: str
     dataset_name: str
     experiment_name: str
 

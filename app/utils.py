@@ -32,7 +32,7 @@ def process_config(fpath: str) -> dict:
     }
     target_cluster = conf['runner_location']
     general_confs = ['runner_location', 'dataset_name',
-                     'train_script_path', 'experiment_name']
+                     'train_script_name', 'experiment_name']
 
     for param in general_confs:
         filtered_confs[param] = conf[param]

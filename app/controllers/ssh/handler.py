@@ -2,7 +2,7 @@
 import hashlib
 from paramiko import SSHClient, AutoAddPolicy
 from scp import SCPClient
-
+import os
 
 class RemoteHandler:
     """Paramiko and scp based remote handler class"""
@@ -54,7 +54,7 @@ class RemoteHandler:
         """Send file via scp"""
         scp = SCPClient(self.client.get_transport())
         local_path = f"app/tmp/{filename}"
-        remote_path = f"/tmp/{filename}"
+        remote_path = f"{os.environ['FOLDER']}{filename}"
         scp.put(local_path, remote_path)
         scp.close()
         sanity_check = self._assert_integrity(filename)

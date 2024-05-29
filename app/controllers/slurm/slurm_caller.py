@@ -8,9 +8,9 @@ class SlurmJobCaller:
     """Slurm Job Caller Class, responsible for a single job.
     """
 
-    def __init__(self, train_script_path, image_name, instance_type, account,
+    def __init__(self, train_script_name, image_name, instance_type, account,
                  dataset_name, experiment_name):
-        self.train_script_path = train_script_path
+        self.train_script_name = train_script_name
         self.image_name = image_name
         self.instance_type = instance_type
         self.account = account
