@@ -36,8 +36,8 @@ app = FastAPI(lifespan=lifespan)
 def atena_upload(fname):
     """Submit job to atena cluster"""
     host = "atn1mg4"
-    user = "f5we"
-    passwd = "595677#Asd1"
+    user = "fg1n"
+    passwd = "Dungeon@42"
     remote.connect(host, user, passwd)
     sanity_check = remote.send_file(fname)
     if not sanity_check:
