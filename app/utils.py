@@ -6,7 +6,7 @@ import json
 def save_file(filename: str, filedata: bin) -> str:
     """Save file to disk"""
     fpath = f"app/tmp/{filename}"
-    if type(filedata) == str:
+    if isinstance(filedata, str):
         filedata = filedata.encode('utf-8')
     with open(fpath, 'wb') as f:
         f.write(filedata)
