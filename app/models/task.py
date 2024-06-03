@@ -15,6 +15,7 @@ class TaskBase(SQLModel):
     train_script_name: str
     dataset_name: str
     experiment_name: str
+    job_id: int
 
 
 class Task(TaskBase, table=True):
