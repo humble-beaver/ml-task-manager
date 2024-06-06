@@ -41,3 +41,25 @@ def process_config(fpath: str) -> dict:
         cluster_param = conf['clusters'][target_cluster]['infra_config'][param]
         filtered_confs[param] = cluster_param
     return filtered_confs
+
+
+def get_status_message(code: str) -> str:
+    """Get status message given status code
+
+    :param code: job status code
+    :type code: str
+    :return: message for the given status code
+    :rtype: str
+    """
+    squeue_status = {
+        "CD": "COMPLETED: The job has completed successfully.",
+        "CG": "COMPLETING: The job is finishing but some processes are still active.",
+        "F": "FAILED: The job terminated with a non-zero exit code and failed to execute.",
+        "PD": "PENDING: The job is waiting for resource allocation. It will eventually run.",
+        "R": "RUNNING: The job currently is allocated to a node and is running.",
+        "S": "SUSPENDED: A running job has been stopped with its cores released to other jobs.",
+        "ST": "STOPPED: A running job has been stopped with its cores retained."
+    }
+    if code not in squeue_status:
+        return "UNKNOWN: The returned job code is not in the list!"
+    return squeue_status[code]

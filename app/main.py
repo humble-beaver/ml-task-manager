@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, UploadFile, status
 from sqlmodel import Session, SQLModel, create_engine, select
 from .models.task import Task, TaskRead
-from .utils import save_file, process_config
+from .utils import save_file, process_config, get_status_message
 from .controllers.ssh.handler import RemoteHandler
 from .controllers.slurm.slurm_manager import prep_template
 
@@ -117,7 +117,7 @@ async def get_job_status(job_id: int):
     remote.exec(f"squeue -j {job_id}")
     output = remote.get_output()[0]
     job_status = output.decode().splitlines()[1].split()[4]
-    return job_status
+    return get_status_message(job_status)
 
 # @app.get("/task/{task_id}", response_model=TaskRead)
 # async def get_task_by_id(task_id: int):
