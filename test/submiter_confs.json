@@ -1,5 +1,5 @@
 {
-    "dataset_name": "wine_classification",
+    "dataset_name": "BostonHousing",
 
     "model_params": {
       "n_estimators": 2,
@@ -10,7 +10,7 @@
     "model_tracking": true,
     "tracking_uri": "experiments",
     "experiment_name": "atena_test",
-    "train_script_name": "test.py",
+    "train_script_name": "main.py",
     "clusters": {
       "dev": {
         "infra_config": {
