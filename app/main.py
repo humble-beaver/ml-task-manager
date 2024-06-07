@@ -121,7 +121,7 @@ async def get_job_status(job_id: int):
     # check squeue --help for options
     remote.exec(f"squeue -j {job_id}")
     output = remote.get_output()[0]
-    job_status = output.decode().splitlines()[1].split()[4]
+    job_status = output.splitlines()[1].split()[4]
     return get_status_message(job_status)
 
 # @app.get("/task/{task_id}", response_model=TaskRead)
