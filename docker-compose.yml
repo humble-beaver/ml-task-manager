@@ -1,6 +1,6 @@
 services:
   web:
-    image: ml-task-manager
+    image: humblebeaver/ml-task-manager
     command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; uvicorn app.main:app --host 0.0.0.0 --reload'
     volumes:
       - .:/app

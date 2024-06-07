@@ -8,19 +8,15 @@ class SlurmJobCaller:
     """Slurm Job Caller Class, responsible for a single job.
     """
 
-    def __init__(self, code_path, num_instances, sif_path, share_dir,
-                 input_folder, output_folder,
-                 slurm_queue, slurm_account):
-        self.code_path = code_path
-        self.num_instances = num_instances
-        self.sif_path = sif_path
-        self.share_dir = share_dir
-        self.input_folder = input_folder
-        self.output_folder = output_folder
-        self.slurm_queue = slurm_queue
-        self.slurm_account = slurm_account
+    def __init__(self, train_script_name, image_name, instance_type, account,
+                 dataset_name, experiment_name):
+        self.train_script_name = train_script_name
+        self.image_name = image_name
+        self.instance_type = instance_type
+        self.account = account
+        self.dataset_name = dataset_name
+        self.experiment_name = experiment_name
         self.job_id = None
-        self.gres = '--gres=gpu:1' if 'gpu' in slurm_queue else ''
 
     def __read_template(self, template_path):
         with open(template_path, "r", encoding='utf-8') as f:

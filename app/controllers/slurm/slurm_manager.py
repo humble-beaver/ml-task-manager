@@ -1,33 +1,26 @@
-"""Slurm Job Manager for job instanciation controll
-"""
-from .slurm_caller import SlurmJobCaller
+"""Slurm Job Manager for job instanciation controll"""
+from ...utils import save_file
+import os
+
+def read_template(template_path):
+    """read template file"""
+    with open(template_path, "r", encoding='utf-8') as f:
+        template = f.read()
+    return template
 
 
-class SlurmManager:
-    """Slurm Job Callers instances controller"""
-
-    def __init__(self):
-        self.callers = {}
-
-    def submit_new_job(self, job_params: dict):
-        """Submit new job by  spawning new SlurmCaller
-
-        :param job_params: Parameters received by request
-        :type job_params: dict
-        :return: ID of the new job
-        :rtype: int
-        """
-        new_caller = SlurmJobCaller(**job_params)
-        new_job_id = new_caller.submit_job()
-        self.callers[new_job_id] = new_caller
-        return new_job_id
-
-    def get_job_status(self, job_id):
-        """Requests the job status by squeue
-
-        :param job_id: The ID of the job
-        :type job_id: int
-        :return: filtered squeue command output with job status character
-        :rtype: str
-        """
-        return self.callers[job_id].get_job_status()
+def prep_template(job_params):
+    """Prepare template with job parameters"""
+    template = read_template("app/controllers/slurm/slurm_template.srm")
+    slurm_script = template.format(
+        experiment_name=job_params['experiment_name'],
+        instance_type=job_params['instance_type'],
+        account=job_params['account'],
+        image_name=job_params['image_name'],
+        train_script_name=job_params['train_script_name'],
+        dataset_name=job_params['dataset_name'],
+        folder=os.environ['FOLDER']
+    )
+    fname = 'slurm_script.srm'
+    save_file(fname, slurm_script)
+    return fname

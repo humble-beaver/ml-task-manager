@@ -1,18 +1,19 @@
 #!/bin/bash
-
-#SBATCH -J ml-training
-#SBATCH -p {slurm_queue}
-#SBATCH --account {slurm_account}
-####SBATCH --array=1-1%1
-#SBATCH --time=7-00:00:00
-#SBATCH --nodes={num_instances}
-#SBATCH --ntasks=1
-#SBATCH --ntasks-per-node=1
-#SBATCH {gres}
-#SBATCH -c 20
+#SBATCH -J {experiment_name}   #Nome job
+#SBATCH -p {instance_type}     #Fila (partition) a ser utilizada
+#SBATCH --account={account}
+#SBATCH --nodes=1               #Numero de Nós
+#SBATCH --ntasks-per-node=1     #Numero de tarefas por Nó
+#SBATCH --ntasks=1              #Numero de tarefas
 #SBATCH --exclusive
 #SBATCH --exclude atn1b01n16,atn1b01n08,atn1b03n25,atn1b01n19
-#SBATCH --output={output_folder}/slurm-%j.out
+#SBATCH -o {folder}/job_output.txt
 
-# TODO: validate if container exists
-singularity run -B {share_dir}:{share_dir}  {sif_path} python {code_path} {input_folder} {output_folder}
+echo "CUDA_VISIBLE_DEVICES: " $CUDA_VISIBLE_DEVICES
+echo $SLURM_JOB_NODELIST
+echo "SLURM_JOBID: " $SLURM_JOBID
+JOBNAME=$SLURM_JOB_NAME
+echo "JOBNAME: " $JOBNAME
+
+# TODO: check if container.sif exists
+singularity run -B {folder} {folder}/{image_name}.sif python3 {folder}/{train_script_name} input_path={folder}/{dataset_name} output_path={folder}
