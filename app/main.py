@@ -27,6 +27,7 @@ async def lifespan(app: FastAPI):
     create_db_and_tables()
     os.makedirs('app/tmp', exist_ok=True)
     yield
+    # TODO: FIX: this is not running when using `scancel`
     shutil.rmtree('app/tmp')
 
 app = FastAPI(lifespan=lifespan)
@@ -39,9 +40,10 @@ def atena_connect():
     :rtype: RemoteHandler
     """
     remote = RemoteHandler()
+    # TODO: adjust to the API's user
     host = "atn1mg4"
-    user = "fg1n"
-    passwd = "Dungeon@42"
+    user = "you_user_here"
+    passwd = "your_passwd_here"
     remote.connect(host, user, passwd)
     return remote
 
@@ -76,7 +78,8 @@ def dev_upload(fname, remote):
     return status.HTTP_200_OK
 
 
-@app.post("/atena_task/", response_model=TaskRead)
+# Atena 02 only but with a more generic name
+@app.post("/new_task/", response_model=TaskRead)
 async def create_task(files: list[UploadFile]):
     """Create new task and save it to DB"""
     remote = atena_connect()
@@ -114,6 +117,8 @@ async def get_tasks():
 async def get_job_status(job_id: int):
     """Retrieve job status given ID"""
     remote = atena_connect()
+    # TODO: Adjust squeue params to prevent using try-except for ended job
+    # check squeue --help for options
     remote.exec(f"squeue -j {job_id}")
     output = remote.get_output()[0]
     job_status = output.decode().splitlines()[1].split()[4]
