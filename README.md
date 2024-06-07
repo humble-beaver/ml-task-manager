@@ -1,23 +1,38 @@
-# Machine Learning Task Manager
+# Machine Learning Task Manager API
 
-The goal of the project is to build a dockerized service that will accept HTTPS requests with a JSON payload containing information about a new ML task that must be sent to the cluster. This JSON will contain the information described bellow, followed by another payload with the running script. The API server will be a FastAPI python server, connected to a PostgreSQL database.
+The goal of the project is to build a dockerized service that will accept HTTPS requests with a multipart payload containing configuration and entrypoint files with the proper information about a new ML task that must be sent to the target cluster. The API server will be a FastAPI python server, connected to a PostgreSQL or SQLITE database.
 
-## Application Stack
+## Installation instructions
 
-This is the stack of technologies used in this application:
+Here we will provide installation instructions for a local cluster development environment using docker-compose and an *almost* "production ready" version for the Atena02 environment.
 
-- FastAPI
-- PostgreSQL
-- Docker
-- SQLModel
+### Atena 02 Cluster
 
-## Task Request Model
+Here we will list the steps requried to install and run inside Atena 02 cluster.
 
-The JSON file sent with the request must contain the following fields:
+1. Connect to Atena 02 running `ssh your_key@atn1mg4`
+2. Go to destination folder (e.g `cd /nethome/projetos30/arcabouco_ml`)
+3. Generate API's singularity image - `singularity build api.sif docker://humblebeaver/ml-task-manager`. Expect an output similar to:
 
-1. TBD
+```bash
+INFO:    Creating SIF file...
+INFO:    Build complete: api.sif
+```
 
-## Installing and Running
+4. Clone this repo - `git clone https://github.com/ICA-PUC/ml-task-manager.git`
+5. Copy the initialization script `run_api.srm` to destination folder - `cp ml-task-manager/run_api.srm ./`
+6. Open the initialization script with your desired text editor and adjust as follows:
+   1. **Line 23**: `export FOLDER="..."` - Must reflect the API's absolute path, e.g:
+  `export FOLDER="/nethome/projetos30/arcabouco_ml/ml-task-manager"`
+   2. **Line 25**: `singularity run ...` - If you named the `.sif` file different than `api.sif` you have to adjust it here. You can also change the external port of the API here if you want
+7. Open the file `ml-task-manager/app/main.py` and adjust lines 45 and 46 with your atena02 user and password
+8. Run the API using `sbatch run_api.srm`
+9. Check provided node name using `squeue --me` and take note of the node name (e.g `atn1b05n14`)
+10. Open a browser from within Petrobras Workspace and access `<node_name>:<port>/docs` (e.g `atn1b05n14:8008/docs`), you should see FastAPI's documentation page.
+
+**NOTE**: If something doesn't work, you can check API logs using `cat log_api.txt`.
+
+### Local Dev Cluster
 
 We can build and run the developing system by calling the following single command:
 
@@ -105,3 +120,45 @@ You will get something like this:
     }
 ]
 ```
+
+## Usage instructions
+
+Here we will describe how to properly consume the API's routes.
+
+### `POST /new_task`
+
+In order for the API to create and submit a new task, the user must provide two files within the `multipart` HTTP request: The JSON configuration file and the entrypoint script to be executed.
+
+Here is a sample of the config JSON file and a brief description of the required fields.
+
+```JSON
+{
+  "dataset_name": "wine_classification",
+  "model_params": {
+    "n_estimators": 2,
+    "random_state": 42
+  },
+  "runner_location": "atena02",
+  "model_tracking": true,
+  "tracking_uri": "experiments",
+  "experiment_name": "atena_test",
+  "train_script_name": "train.py",
+  "clusters": {
+    "atena02": {
+      "infra_config": {
+        "instance_type": "cpu",
+        "image_name": "sklearn_sample_latest",
+        "account": "twinscie"
+      }
+    }
+  }
+}
+```
+
+- **dataset_name**: The name of the dataset `.csv` file.
+- **runner_location**: Name of the target cluster (e.g `atena02`, `aws`, `azure`, etc.)
+- **experiment_name**: Name of the experiment.
+- **script_name**: Name of the entrypoint script.
+- **instance_type**: The kind of slurm instance to host the job.
+- **image_name**: The name of the `.sif` image to run the experiment.
+- **account**: Slurm user and job owner's account name.
