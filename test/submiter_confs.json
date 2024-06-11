@@ -10,7 +10,7 @@
     "model_tracking": true,
     "tracking_uri": "experiments",
     "experiment_name": "atena_test",
-    "train_script_name": "main.py",
+    "script_path": "path/to/script.py",
     "clusters": {
       "dev": {
         "infra_config": {

@@ -142,7 +142,7 @@ Here is a sample of the config JSON file and a brief description of the required
   "model_tracking": true,
   "tracking_uri": "experiments",
   "experiment_name": "atena_test",
-  "train_script_name": "train.py",
+  "script_path": "path/to/script.py",
   "clusters": {
     "atena02": {
       "infra_config": {

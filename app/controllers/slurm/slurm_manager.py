@@ -17,7 +17,7 @@ def prep_template(job_params):
         instance_type=job_params['instance_type'],
         account=job_params['account'],
         image_name=job_params['image_name'],
-        train_script_name=job_params['train_script_name'],
+        script_path=job_params['script_path'],
         dataset_name=job_params['dataset_name'],
         folder=os.environ['FOLDER']
     )
