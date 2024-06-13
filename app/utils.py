@@ -53,13 +53,28 @@ def get_status_message(code: str) -> str:
     """
     squeue_status = {
         "CD": "COMPLETED: The job has completed successfully.",
-        "CG": "COMPLETING: The job is finishing but some processes are still active.",
-        "F": "FAILED: The job terminated with a non-zero exit code and failed to execute.",
-        "PD": "PENDING: The job is waiting for resource allocation. It will eventually run.",
-        "R": "RUNNING: The job currently is allocated to a node and is running.",
-        "S": "SUSPENDED: A running job has been stopped with its cores released to other jobs.",
-        "ST": "STOPPED: A running job has been stopped with its cores retained."
+        "CG": "COMPLETING: The job is finishing but some processes are still \
+            active.",
+        "F": "FAILED: The job terminated with a non-zero exit code and failed \
+            to execute.",
+        "PD": "PENDING: The job is waiting for resource allocation. It will \
+            eventually run.",
+        "R": "RUNNING: The job is allocated to a node and running.",
+        "S": "SUSPENDED: Running job has been stopped with its cores \
+            released to other jobs.",
+        "ST": "STOPPED: Running job has been stopped with its cores retained."
     }
     if code not in squeue_status:
         return "UNKNOWN: The returned job code is not in the list!"
     return squeue_status[code]
+
+
+def strip_filename(file_path: str) -> str:
+    """Strip filename from a path
+
+    :param file_path: path to be stripped
+    :type file_path: str
+    :return: filename stripped
+    :rtype: str
+    """
+    return file_path.split('/')[-1]

@@ -11,7 +11,10 @@ def read_template(template_path):
 
 def prep_template(job_params):
     """Prepare template with job parameters"""
-    template = read_template("app/controllers/slurm/slurm_template.srm")
+    if "atena" in job_params['runner_location']:
+        template = read_template("app/controllers/slurm/slurm_template.srm")
+    else:
+        template = read_template("app/controllers/slurm/dev_template.srm")
     slurm_script = template.format(
         experiment_name=job_params['experiment_name'],
         instance_type=job_params['instance_type'],
