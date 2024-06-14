@@ -3,7 +3,7 @@
   "image_name": "sklearn_sample_latest",
   "account": "twinscie",
   "runner_location": "atena02",
-  "train_script_name": "train.py",
+  "script_path": "train.py",
   "dataset_name": "wine_classification",
   "experiment_name": "atena_test",
   "job_id": 5321444,
