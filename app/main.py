@@ -100,7 +100,11 @@ async def create_task(files: list[UploadFile]):
     srm_path = f"{root_folder}/{srm_name}"
     file_upload(srm_name, srm_path, remote)
     remote.exec(f"sbatch {root_folder}/{srm_path}")
-    job_id = remote.get_output()[0].split('Submitted batch job ')[1][:-1]
+    output = remote.get_output()
+    if output[0]:
+        job_id = output[0].split('Submitted batch job ')[1][:-1]
+    elif output[1]:
+        return {"msg": output[1]}
     remote.close()
     task['job_id'] = job_id
     with Session(engine) as session:
