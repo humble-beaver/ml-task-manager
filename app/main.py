@@ -99,7 +99,7 @@ async def create_task(files: list[UploadFile]):
     srm_name = prep_template(task)
     srm_path = f"{root_folder}/{srm_name}"
     file_upload(srm_name, srm_path, remote)
-    remote.exec(f"sbatch {root_folder}/{srm_path}")
+    remote.exec(f"sbatch {srm_path}")
     output = remote.get_output()
     if output[0]:
         job_id = output[0].split('Submitted batch job ')[1][:-1]
