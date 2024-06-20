@@ -2,7 +2,7 @@
 
 docker pull postgres:15-alpine
 
-cd app
+cd app/docker
 docker build -t humblebeaver/ml-task-manager .
 
 cd ../manager

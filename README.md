@@ -22,13 +22,13 @@ INFO:    Build complete: api.sif
 4. Clone this repo - `git clone https://github.com/ICA-PUC/ml-task-manager.git`
 5. Copy the initialization script `run_api.srm` to destination folder - `cp ml-task-manager/run_api.srm ./`
 6. Open the initialization script with your desired text editor and adjust as follows:
-   1. **Line 23**: `export FOLDER="..."` - Must reflect the API's absolute path, e.g:
-  `export FOLDER="/nethome/projetos30/arcabouco_ml/ml-task-manager"`
-   2. **Line 25**: `singularity run ...` - If you named the `.sif` file different than `api.sif` you have to adjust it here. You can also change the external port of the API here if you want
-7. Open the file `ml-task-manager/app/main.py` and adjust lines 45 and 46 with your atena02 user and password
-8. Run the API using `sbatch run_api.srm`
-9. Check provided node name using `squeue --me` and take note of the node name (e.g `atn1b05n14`)
-10. Open a browser from within Petrobras Workspace and access `<node_name>:<port>/docs` (e.g `atn1b05n14:8008/docs`), you should see FastAPI's documentation page.
+   1. **Line 17**: `export ROOT_API="..."` - Must reflect the API's absolute path, e.g:
+  `export ROOT_API="/nethome/projetos30/arcabouco_ml/ml-task-manager"`.
+   2. **Line 18**: `export SIF_PATH="..."` - Must reflect API's `.sif` absolute_path.
+1. Open `template.env` and add your atena02 user and password.
+2. Run the API using `sbatch run_api.srm`
+3. Check provided node name using `squeue --me` and take note of the node name (e.g `atn1b05n14`)
+4.  Open a browser from within Petrobras Workspace and access `<node_name>:<port>/docs` (e.g `atn1b05n14:8008/docs`), you should see FastAPI's documentation page.
 
 **NOTE**: If something doesn't work, you can check API logs using `cat log_api.txt`.
 

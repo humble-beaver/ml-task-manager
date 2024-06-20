@@ -10,18 +10,13 @@
 #SBATCH -o log_api.txt
 
 echo "CUDA_VISIBLE_DEVICES: " $CUDA_VISIBLE_DEVICES
-echo $SLURM_JOB_NODELIST
-echo "SLURM_JOBID: " $SLURM_JOBID
-JOBNAME=$SLURM_JOB_NAME
-echo "JOBNAME: " $JOBNAME
+echo "JOB NODELIST": $SLURM_JOB_NODELIST
+echo "JOB ID: " $SLURM_JOBID
+echo "JOB NAME: " $SLURM_JOB_NAME
 
-export DATABASE_URL=postgresql://ml-task-manager:ml-task-manager@db:5432/ml-task-manager
-export DEBUG=1
-export POSTGRES_USER=ml-task-manager
-export POSTGRES_PASSWORD=ml-task-manager
-export POSTGRES_DB=ml-task-manager
-export FOLDER="/u/fg1n/digital-twin/ml-task-manager"
+export ROOT_API=/u/fg1n/digital-twin/ml-task-manager
+export SIF_PATH=/u/fg1n/sif_images/api.sif
 
-singularity run -B $FOLDER:$FOLDER $FOLDER/api.sif sh $FOLDER/run_api.sh --port 8008 --host 0.0.0.0
+singularity run -B $ROOT_API:$ROOT_API $SIF_PATH sh $ROOT_API/run_api.sh --port 8008 --host 0.0.0.0
 
-echo "fim"
+echo "run_api.srm finished."
