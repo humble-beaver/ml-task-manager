@@ -42,8 +42,8 @@ def atena_connect():
     remote = RemoteHandler()
     # TODO: adjust to the API's user
     host = "atn1mg4"
-    user = "you_user_here"
-    passwd = "your_passwd_here"
+    user = os.environ["USER"]
+    passwd = os.environ["KEY_ATENA"]
     remote.connect(host, user, passwd)
     return remote
 

@@ -15,5 +15,5 @@ echo "SLURM_JOBID: " $SLURM_JOBID
 JOBNAME=$SLURM_JOB_NAME
 echo "JOBNAME: " $JOBNAME
 
-# TODO: check if container.sif exists
-singularity run -B {folder} {folder}/{image_name}.sif python3 {script_path} input_path={folder}/{dataset_name} output_path={folder}
+# TODO: check if container.sif exists #/nethome = solucao temporaria
+singularity run -B /nethome {folder}/{image_name}.sif python3 {script_path} --input_path={folder}/{dataset_name} --output_path={folder}
