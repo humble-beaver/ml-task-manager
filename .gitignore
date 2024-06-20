@@ -1,6 +1,8 @@
 database.db
 *.csv
 *.sif
+*.md5
+*.pkl
 
 
 # Byte-compiled / optimized / DLL files
