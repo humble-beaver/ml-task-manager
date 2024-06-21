@@ -11,9 +11,9 @@ class Settings(BaseSettings):
     :param BaseSettings: pydantic base settings class
     :type BaseSettings: class
     """
+    load_dotenv()
     db_url: str = Field(validation_alias='DATABASE_URL')
     folder: str = Field(validation_alias='FOLDER')
 
 
-load_dotenv()
 settings = Settings()
