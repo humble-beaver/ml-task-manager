@@ -6,9 +6,10 @@ from fastapi import FastAPI, UploadFile, status
 from sqlmodel import Session, SQLModel, create_engine, select
 from .models.task import Task, TaskRead
 from .utils import save_file, process_config, get_status_message
+from .utils import strip_filename
 from .controllers.ssh.handler import RemoteHandler
 from .controllers.slurm.slurm_manager import prep_template
-
+from .config import settings
 
 SQLITE_FILE_NAME = "database.db"
 sqlite_url = f"sqlite:///{SQLITE_FILE_NAME}"
@@ -40,7 +41,7 @@ def atena_connect():
     :rtype: RemoteHandler
     """
     remote = RemoteHandler()
-    # TODO: adjust to the API's user
+    # adjust to the API's user
     host = "atn1mg4"
     user = "you_user_here"
     passwd = "your_passwd_here"
@@ -62,39 +63,48 @@ def dev_connect():
     return remote
 
 
-def atena_upload(fname, remote):
+def file_upload(fname, remote_path, remote):
     """Submit job to atena cluster"""
-    sanity_check = remote.send_file(fname)
+    sanity_check = remote.send_file(fname, remote_path)
     if not sanity_check:
         return status.HTTP_500_INTERNAL_SERVER_ERROR
     return status.HTTP_200_OK
 
 
-def dev_upload(fname, remote):
-    """Submit job to local dev cluster"""
-    sanity_check = remote.send_file(fname)
-    if not sanity_check:
-        return status.HTTP_500_INTERNAL_SERVER_ERROR
-    return status.HTTP_200_OK
-
-
-# Atena 02 only but with a more generic name
-@app.post("/new_task/", response_model=TaskRead)
+@app.post("/new_task/")
 async def create_task(files: list[UploadFile]):
     """Create new task and save it to DB"""
-    remote = atena_connect()
+    root_folder = settings.folder
+
     for file in files:
         fname = file.filename
         fdata = await file.read()
         fpath = save_file(fname, fdata)
         if ".json" in fname:
-            task = process_config(fpath)
+            conf_path = fpath
         if ".py" in fname:
-            atena_upload(fname, remote)
-    srm_path = prep_template(task)
-    atena_upload(srm_path, remote)
-    remote.exec(f"sbatch {os.environ['FOLDER']}/{srm_path}")
-    job_id = remote.get_output()[0].split('Submitted batch job ')[1][:-1]
+            py_name = fname
+    task = process_config(conf_path)
+    script_name = strip_filename(task['script_path'])
+    if script_name != py_name:
+        return {
+            "msg": f"{script_name} and {py_name} must have same name",
+            "status": status.HTTP_400_BAD_REQUEST
+        }
+    if "atena" in task['runner_location']:
+        remote = atena_connect()
+    else:
+        remote = dev_connect()
+    file_upload(fname, task['script_path'], remote)
+    srm_name = prep_template(task)
+    srm_path = f"{root_folder}/{srm_name}"
+    file_upload(srm_name, srm_path, remote)
+    remote.exec(f"sbatch {srm_path}")
+    output = remote.get_output()
+    if output[0]:
+        job_id = output[0].split('Submitted batch job ')[1][:-1]
+    elif output[1]:
+        return {"msg": output[1]}
     remote.close()
     task['job_id'] = job_id
     with Session(engine) as session:
@@ -121,17 +131,11 @@ async def get_job_status(job_id: int):
     # check squeue --help for options
     remote.exec(f"squeue -j {job_id}")
     output = remote.get_output()[0]
-    job_status = output.splitlines()[1].split()[4]
+    try:
+        job_status = output.splitlines()[1].split()[4]
+    except IndexError:
+        return output
     return get_status_message(job_status)
-
-# @app.get("/task/{task_id}", response_model=TaskRead)
-# async def get_task_by_id(task_id: int):
-#     """Retrieve single record of Task that corresponds to given id"""
-#     with Session(engine) as session:
-#         task = session.get(Task, task_id)
-#         if not task:
-#             raise HTTPException(status_code=404, detail="Task not found")
-#         return task
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-"""Database configuration file
+"""Compose environment loader
 """
 from pydantic_settings import BaseSettings
 from pydantic import Field
@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     :type BaseSettings: class
     """
     db_url: str = Field(validation_alias='DATABASE_URL')
+    folder: str = Field(validation_alias='FOLDER')
 
 
 settings = Settings()

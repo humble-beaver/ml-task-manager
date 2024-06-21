@@ -6,11 +6,11 @@
       "random_state": 42
     },
 
-    "runner_location": "atena02",
+    "runner_location": "dev",
     "model_tracking": true,
     "tracking_uri": "experiments",
     "experiment_name": "atena_test",
-    "script_path": "path/to/script.py",
+    "script_path": "./script.py",
     "clusters": {
       "dev": {
         "infra_config": {
