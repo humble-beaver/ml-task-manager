@@ -2,7 +2,7 @@
 import os
 import shutil
 from contextlib import asynccontextmanager
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 from fastapi import FastAPI, UploadFile, status
 from sqlmodel import Session, SQLModel, create_engine, select
 from .models.task import Task, TaskRead
@@ -27,7 +27,7 @@ async def lifespan(app: FastAPI):
     """Lifespan function for initialization and shutting down functions"""
     # db.init_db()
     create_db_and_tables()
-    load_dotenv()
+    # load_dotenv()
     os.makedirs('app/tmp', exist_ok=True)
 
     yield
