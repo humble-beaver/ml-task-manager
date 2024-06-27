@@ -2,6 +2,7 @@
 """
 from pydantic_settings import BaseSettings
 from pydantic import Field
+from dotenv import load_dotenv
 
 
 class Settings(BaseSettings):
@@ -14,4 +15,5 @@ class Settings(BaseSettings):
     folder: str = Field(validation_alias='FOLDER')
 
 
+load_dotenv()
 settings = Settings()

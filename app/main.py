@@ -2,6 +2,7 @@
 import os
 import shutil
 from contextlib import asynccontextmanager
+# from dotenv import load_dotenv
 from fastapi import FastAPI, UploadFile, status
 from sqlmodel import Session, SQLModel, create_engine, select
 from .models.task import Task, TaskRead
@@ -26,7 +27,9 @@ async def lifespan(app: FastAPI):
     """Lifespan function for initialization and shutting down functions"""
     # db.init_db()
     create_db_and_tables()
+    # load_dotenv()
     os.makedirs('app/tmp', exist_ok=True)
+
     yield
     # TODO: FIX: this is not running when using `scancel`
     shutil.rmtree('app/tmp')
@@ -43,8 +46,8 @@ def atena_connect():
     remote = RemoteHandler()
     # adjust to the API's user
     host = "atn1mg4"
-    user = "you_user_here"
-    passwd = "your_passwd_here"
+    user = os.getenv('ATENA_USER')
+    passwd = os.getenv('ATENA_PASSWD')
     remote.connect(host, user, passwd)
     return remote
 
@@ -74,6 +77,7 @@ def file_upload(fname, remote_path, remote):
 @app.post("/new_task/")
 async def create_task(files: list[UploadFile]):
     """Create new task and save it to DB"""
+    # TODO: Split this frankenstein into functions
     root_folder = settings.folder
 
     for file in files:
