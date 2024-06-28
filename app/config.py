@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     :type BaseSettings: class
     """
     db_url: str = Field(validation_alias='DATABASE_URL')
-    folder: str = Field(validation_alias='FOLDER')
+    atena_root: str = Field(validation_alias='ATENA_ROOT')
 
 
 load_dotenv()
